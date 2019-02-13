@@ -1,0 +1,268 @@
+1. JDBC Programme
+
+Source code
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+class JdbcExample {
+	public static void main(String[] args) {
+		System.out.println("Java JDBC PostgreSQL Example");
+		Statement statement = null;
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/training",
+				"postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database!");
+			statement = connection.createStatement();
+			System.out.println("Reading Student records...");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.Student");
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("id"));
+			}
+			System.out.println("Read Completed!!");
+
+			String insertQuery2 = "INSERT INTO public.Student VALUES (10)";
+			statement.executeUpdate(insertQuery2);
+			System.out.println("Write Completed!!");
+			String alterq="ALTER TABLE public.Student ADD COLUMN college TEXT DEFAULT 'LPU'";
+			statement.executeUpdate(alterq);
+			System.out.println("altered Completed!!");
+
+		}  catch (SQLException e) {
+			System.out.println("Connection failure.");
+			e.printStackTrace();
+		}
+	}
+}
+
+
+Output:
+
+Java JDBC PostgreSQL Example
+Connected to PostgreSQL database!
+Reading Student records...
+6
+10
+10
+Read Completed!!
+Write Completed!!
+altered Completed!!
+
+...........................................................
+2. HashCode and Equal Example
+
+Source Code:-
+
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Student {
+	String name;
+	int id;
+
+	Student(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		System.out.println("equal working");
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		if (this == obj)
+			return true;
+		Student s = (Student) obj;
+		if (s.id == this.id && s.name == this.name) {
+			return true;
+		}
+		return false;
+	}
+	public static int genHash(String s) {
+		int has=0;
+		for(int i=0;i<s.length();i++) {
+			has+=(int)s.charAt(i);
+		}
+		return has;
+	}
+	@Override
+	public int hashCode() {
+		return genHash(this.toString());
+	}
+
+	@Override
+	public String toString() {
+		return this.id + "  " + this.name;
+	}
+}
+
+class HashCodeandEqual {
+	public static void main(String[] args) {
+		Student s1 = new Student("Mnoj", 1);
+		Student s2 = new Student("Manoj", 1);
+		Student s3 = new Student("Vishal", 3);
+		List<Integer> l=new ArrayList<Integer>();
+		for(Integer s:l) {
+			System.out.println(s);
+		}
+		Map<Student, String> map = new HashMap<Student, String>();
+		map.put(s1, "Codeground");
+		map.put(s2, "Visionel");
+		map.put(s3, "Builderhhhhh");
+		// System.out.println(s1.equals(s2));
+		for (Student student : map.keySet()) {
+			System.out.println(map.get(student).toString() + "	" + student.toString());
+		}
+
+	}
+}
+
+output: 
+
+Codeground	1  Mnoj
+Visionel	1  Manoj
+Builderhhhhh	3  Vishal
+..............................................................................
+
+3. JoinMethodExample
+
+Source Code:- 
+public class JoinMethodExample extends Thread {
+	public void run() {
+		for (int i = 1; i <= 5; i++) {
+			try {
+				Thread.sleep(500);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			System.out.println("Executing Number : " + Thread.currentThread().getName());
+		}
+	}
+
+	public static void main(String args[]) {
+		JoinMethodExample t1 = new JoinMethodExample();
+		JoinMethodExample t2 = new JoinMethodExample();
+		JoinMethodExample t3 = new JoinMethodExample();
+		JoinMethodExample t4 = new JoinMethodExample();
+		JoinMethodExample t5 = new JoinMethodExample();
+		JoinMethodExample t6 = new JoinMethodExample();
+		JoinMethodExample t7 = new JoinMethodExample();
+		t1.start();
+		t2.start();
+		t3.start();
+		try {
+			t3.join();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		t4.start();
+		t5.start();
+		t6.start();
+		t7.start();
+	}
+}
+
+output:
+
+Executing Number : Thread-1
+Executing Number : Thread-0
+Executing Number : Thread-2
+Executing Number : Thread-1
+Executing Number : Thread-0
+Executing Number : Thread-2
+Executing Number : Thread-1
+Executing Number : Thread-2
+Executing Number : Thread-0
+Executing Number : Thread-2
+Executing Number : Thread-0
+Executing Number : Thread-1
+Executing Number : Thread-1
+Executing Number : Thread-2
+Executing Number : Thread-0
+Executing Number : Thread-3
+Executing Number : Thread-4
+Executing Number : Thread-5
+Executing Number : Thread-6
+Executing Number : Thread-3
+Executing Number : Thread-4
+Executing Number : Thread-6
+Executing Number : Thread-5
+Executing Number : Thread-4
+Executing Number : Thread-3
+Executing Number : Thread-6
+Executing Number : Thread-5
+Executing Number : Thread-4
+Executing Number : Thread-3
+Executing Number : Thread-5
+Executing Number : Thread-6
+Executing Number : Thread-3
+Executing Number : Thread-4
+Executing Number : Thread-5
+Executing Number : Thread-6
+
+.................................................................
+
+4. Hashtable Example
+
+Source code:
+import java.util.*;  
+public class ExampleHashTable {  
+   public static void main(String args[]) {  
+  Hashtable<Integer,String> map=new Hashtable<Integer,String>();        
+     map.put(100,"Amit");    
+     map.put(102,"Ravi");   
+     map.put(101,"Vijay");    
+     map.put(103,"Rahul");    
+     System.out.println("Before remove: "+ map);    
+       // Remove value for key 102  
+       map.remove(102);  
+       System.out.println("After remove: "+ map);  
+   }      
+}  
+
+
+................................................................
+5.Linked HashSet
+Source Code: 
+
+import java.util.LinkedHashSet;   
+public class LinkedHashSetJava  
+{   
+    public static void main(String[] args)  
+    {   
+        LinkedHashSet<String> linkedset =  
+                           new LinkedHashSet<String>();   
+  
+        // Adding element to LinkedHashSet   
+        linkedset.add("A");   
+        linkedset.add("B");   
+        linkedset.add("C");   
+        linkedset.add("D");  
+  
+        // This will not add new element as A already exists  
+        linkedset.add("A");  
+        linkedset.add("E");   
+  
+        System.out.println("Size of LinkedHashSet = " + 
+                                    linkedset.size());   
+        System.out.println("Original LinkedHashSet:" + linkedset);   
+        System.out.println("Removing D from LinkedHashSet: " + 
+                            linkedset.remove("D"));   
+        System.out.println("Trying to Remove Z which is not "+ 
+                            "present: " + linkedset.remove("Z"));   
+        System.out.println("Checking if A is present=" +  
+                            linkedset.contains("A")); 
+        System.out.println("Updated LinkedHashSet: " + linkedset);   
+    }   
+} 
+
+6. 
